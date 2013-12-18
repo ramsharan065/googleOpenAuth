@@ -5,10 +5,16 @@ import org.scribe.oauth.OAuthService;
 
 import grails.converters.JSON
 
+import com.test.auth.User
+import grails.plugin.springsecurity.SpringSecurityService;
+import grails.plugin.springsecurity.annotation.Secured;
+
+@Secured(["is_authenticated_anonymously"])
 class OauthCallBackController {
 
 	def grailsApplication
 	def oauthService
+	def springSecurityService
 
 	def index() {
 		render view: '/index'
@@ -23,6 +29,14 @@ class OauthCallBackController {
 			Map data = [id: googleResponse.id,email: googleResponse.email, name: googleResponse.name, given_name: googleResponse.given_name, family_name: googleResponse.family_name,
 				gender: googleResponse.gender, link: googleResponse.link]
 			println data
+			def username = googleResponse.email
+			def user = User.getByUsername(username)
+			if(user){
+				springSecurityService.reauthenticate(user.username)
+				render "$user.fullname is logged in "
+			}else{
+				render "user with ${username} is not allowed to access this system"
+			}
 			render view: '/index', model: [provider: 'Google +', data: data]
 		} else {
 			flash.error = "Token not found."
