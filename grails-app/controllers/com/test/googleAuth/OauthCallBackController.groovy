@@ -9,7 +9,7 @@ import com.test.auth.User
 import grails.plugin.springsecurity.SpringSecurityService;
 import grails.plugin.springsecurity.annotation.Secured;
 
-@Secured(["is_authenticated_anonymously"])
+@Secured(["IS_AUTHENTICATED_ANONYMOUSLY"])
 class OauthCallBackController {
 
 	def grailsApplication
@@ -30,14 +30,16 @@ class OauthCallBackController {
 				gender: googleResponse.gender, link: googleResponse.link]
 			println data
 			def username = googleResponse.email
-			def user = User.getByUsername(username)
+			def user = User.findByUsername(username)
 			if(user){
 				springSecurityService.reauthenticate(user.username)
 				render "$user.fullname is logged in "
+				return
 			}else{
 				render "user with ${username} is not allowed to access this system"
+				return
 			}
-			render view: '/index', model: [provider: 'Google +', data: data]
+			// render view: '/index', model: [provider: 'Google +', data: data]
 		} else {
 			flash.error = "Token not found."
 			render view: '/index'
