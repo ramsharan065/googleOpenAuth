@@ -7,6 +7,7 @@ import grails.converters.JSON
 
 class OauthCallBackController {
 
+	def grailsApplication
 	def oauthService
 
 	def index() {
@@ -16,7 +17,7 @@ class OauthCallBackController {
 	def google() {
 		Token googleAccessToken = (Token) session[oauthService.findSessionKeyForAccessToken('google')]
 		if (googleAccessToken) {
-			def googleResource = oauthService.getGoogleResource(googleAccessToken, "https://www.googleapis.com/oauth2/v1/userinfo")
+			def googleResource = oauthService.getGoogleResource(googleAccessToken, grailsApplication.config.grails.google.api.url )
 			def googleResponse = JSON.parse(googleResource?.getBody())
 			println request.getHeader("Referer");
 			Map data = [id: googleResponse.id,email: googleResponse.email, name: googleResponse.name, given_name: googleResponse.given_name, family_name: googleResponse.family_name,
