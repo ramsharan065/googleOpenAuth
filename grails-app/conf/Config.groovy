@@ -151,3 +151,19 @@ oauth {
 }
 
 grails.google.api.url = "https://www.googleapis.com/oauth2/v1/userinfo"
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.test.auth.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.test.auth.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.test.auth.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll']
+]
+
