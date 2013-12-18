@@ -1,3 +1,7 @@
+import com.test.auth.Role
+import com.test.auth.User
+import com.test.auth.UserRole
+
 class BootStrap {
 
     def init = { servletContext ->
